@@ -1,6 +1,6 @@
 ---
 title: "Assignment 1: Introduction"
-author: "Student Name"
+author: "Halina Malinowski"
 output: pdf_document
 geometry: margin=2.54cm
 ---
@@ -22,21 +22,20 @@ The completed exercise is due on <>.
 
 1. What are your previous experiences with data analytics, R, and Git? Include both formal and informal training.
 
-> Answer: 
+> Answer: I have some experience with data analytics, R, and Git. However, my level with each is a bit varied. Fall of 2020, I took ENV 710, Applied Data Analysis for Environmental Sciences. This course covered several statistics and some data processing in R. At the end of the semester I completed a project on data I had prevoiously collected and worked through the process of data wrangling and running some simpled statistical code in R. As part of my lab I have also been involved with an on-going project on above ground biomass in Gabon. Here, I have used R to clean data and have done a little mapping work in R. Additionally, I am part of a BASS Connections project where I have worked in R to run some statistics on biodiversity and above ground carbon from our labs datasets. I have also had a little bit more exposure to R in a few courses including Landscape Analysis and Management and Food Web Theory. At the very end of last semester, my lab decided to move all of our code for our above ground biomass project on to Github. Therefore, I installed Git on my computer and have been using it when working on our project. However, Git is still very new to me. I do have some background in R at this point, but I still feel very uncertain and feel that I need a lot more practice to develop this skill further. At the moment coding does not come naturally to me and I need to do a lot of googling to work my way through various projects. I certainly would like to get more comfortable with R, understanding the "syntax" of the language and error messages, and feel more confident in my abilities to tactle data and analysis in R. 
 
 2. Are there any components of the course about which you feel confident?
 
-> Answer: 
+> Answer: I feel that the introduction to the course and maybe the first week or so will be a bit easier for me and a good review. However, I do not feel particularly confident in my R skills, but I am really looking forward to sharpening these skills. Therefore, I am confident in my ability to work hard at this course and put in the necessary time to solidify these skills so that I can advance my career. I believe I am also becoming a bit better at trouble shooting in R so that will hopefully be advantageous. I also understand some of the basic syntax in R and how to manuever through RStudio. I feel confident in importing datasets and some basic data exploration as well as some visualization making basic plots and using ggplot. I really see the usefulness in being able to write, comprehend, and analyze R code so I am eager to jump into this course!
 
 3. Are there any components of the course about which you feel apprehensive?
 
-> Answer: 
-
+> Answer: I am certainly a bit apprehensive about this course especially as we get further into the semester. I have used R Markdown before, but I've run into problems several times. I'm certain that I can troubleshoot this, but I am certainly apprehensive about Markdown. I have also never used R tidy and have really only worked with base R so I am eager to learn about tidy, but also a bit worried about the different methods for coding using tidy. I think some of the larer weeks in the course might be a bit tricky for me such as time series analysisy and various trend analysis and observations. Furthermore, I am very excited to learn about R shiny. One of my labmates has used R shiny quite a bit in there research and visualization and I would love to learn how to use it so I may apply it to my own work. That being said I am a bit apprehensive about it because I've never done anything with R shiny or R dashboards and really do not have any background in what goes into it. The python from an R perspective lesson also looks extremely useful especially given some of my work in GIS, but I have never coded in python so this will likely be a challenge for me as well. Either way I'm enthusiastic to be starting this course and think it will be a great learning experience and very beneficial for my own work. 
 
 ## 2) GitHub
 
 Provide a link below to your forked course repository in GitHub. Make sure you have pulled all recent changes from the course repository  and that you have updated your course README file. 
 
-> Answer: 
+> Answer: https://github.com/ham-duke/Environmental_Data_Analytics_2022.git
 
 
