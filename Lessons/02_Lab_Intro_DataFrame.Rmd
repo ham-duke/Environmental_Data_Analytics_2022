@@ -7,13 +7,15 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+#echo = True all r chunks printed when knitted
+#here you manually load packages too, library()
 ```
 
 ## Data frame definition
 
-A **data frame** is used for storing data tables. It a list a vector of equal length. 
+A **data frame** is used for storing data tables. It is a list of vectors of equal length. 
 
-When we import data to R, data frame is the preferred way for storing the data because columns can have different modes (character, numeric, integer, logical, complex).
+When we import data to R, a data frame is the preferred way for storing the data because columns can have different modes (character, numeric, integer, logical, complex).
 
 
 ## Data frame built-in example
@@ -44,7 +46,7 @@ car_speed
 
 ## Transforming object in a data frame
 
-Is the new object you create a data frame?
+Is the new object you created a data frame?
 ```{r}
 #Option 1
 class(car_speed)
