@@ -19,10 +19,10 @@ getwd()
 library(tidyverse)
 
 PeterPaul.chem.nutrients <- 
-  read.csv("./Data/Processed/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv")
+  read.csv("NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv")
 PeterPaul.chem.nutrients.gathered <-
-  read.csv("./Data/Processed/NTL-LTER_Lake_Nutrients_PeterPaulGathered_Processed.csv")
-EPAair <- read.csv("./Data/Processed/EPAair_O3_PM25_NC2021_Processed.csv")
+  read.csv("NTL-LTER_Lake_Nutrients_PeterPaulGathered_Processed.csv")
+EPAair <- read.csv("EPAair_O3_PM25_NC2021_Processed.csv")
 
 EPAair$Date <- as.Date(EPAair$Date, format = "%Y-%m-%d")
 PeterPaul.chem.nutrients$sampledate <- as.Date(
@@ -175,7 +175,7 @@ print(NvsP)
 NvsP2 <-
   ggplot(PeterPaul.chem.nutrients, aes(x = tp_ug, y = tn_ug, color = depth, shape = lakename)) +
   geom_point(alpha = 0.7, size = 2.5) +
-  #labs() + # change your legend labels here
+  xlab("TP mg/L") + # change your legend labels here
   scale_shape_manual(values = c(15, 17)) +
   #scale_color_distiller(palette = "Blues", direction = 1) + # use scale_color_brewer for discrete variables
   scale_color_viridis(option = "magma", direction = -1) +
@@ -190,12 +190,18 @@ print(NvsP2)
 Nutrientplot <-
   ggplot(PeterPaul.chem.nutrients.gathered, aes(x = lakename, y = concentration, color = nutrient)) +
   geom_boxplot() +
+  ylab("Concentration (mg/L)")+
+  xlab("")+
 # place your additional edits here
   scale_y_continuous(expand = c(0, 0)) +
-  #scale_color_brewer(palette = "YlGnBu") +
+  scale_color_brewer(palette = "YlGnBu") +
   #scale_color_manual(values = c("#7fcdbb", "#41b6c4", "#1d91c0", "#225ea8", "#0c2c84")) +
   #scale_color_viridis(discrete = TRUE, end = 0.8) +
-  theme(legend.position = "right")
+  theme(legend.position = "right")+
+  scale_fill_discrete(name="Nutrient Legend",
+                         breaks=c("nh34", "no23", "po4", "tn_ug", "tp_ug"),
+                         labels=c("1", "2", "3", "4", "5"))
+
 print(Nutrientplot)
 ```
 
