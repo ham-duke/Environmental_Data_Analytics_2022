@@ -163,6 +163,7 @@ scales::show_col(colormap(colormap = colormaps$viridis, nshades = 16))
 scales::show_col(colormap(colormap = colormaps$inferno, nshades = 16))
 scales::show_col(colormap(colormap = colormaps$magma, nshades = 16))
 display.brewer.all(n = 9)
+scales::show_col(colormap(colormap = colormaps$greens, nshades = 16))
 
 NvsP <-
   ggplot(PeterPaul.chem.nutrients, aes(x = tp_ug, y = tn_ug, color = depth, shape = lakename)) +
@@ -194,8 +195,8 @@ Nutrientplot <-
   xlab("")+
 # place your additional edits here
   scale_y_continuous(expand = c(0, 0)) +
-  scale_color_brewer(palette = "YlGnBu") +
-  #scale_color_manual(values = c("#7fcdbb", "#41b6c4", "#1d91c0", "#225ea8", "#0c2c84")) +
+  #scale_color_brewer(palette = "YlGnBu") +
+  scale_color_manual(values = c("#7fcdbb", "#41b6c4", "#1d91c0", "#225ea8", "#0c2c84")) +
   #scale_color_viridis(discrete = TRUE, end = 0.8) +
   theme(legend.position = "right")+
   scale_fill_discrete(name="Nutrient Legend",
