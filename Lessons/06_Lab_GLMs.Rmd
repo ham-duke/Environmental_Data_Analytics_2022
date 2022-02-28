@@ -18,7 +18,8 @@ editor_options:
 ## Set up
 ```{r, message = FALSE}
 library(tidyverse)
-library(agricolae)   
+library(agricolae)
+library(corrplot)
 
 PeterPaul.chem.nutrients <- read.csv("./Data/Processed/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv", stringsAsFactors = TRUE)
 # Set date to date format
@@ -165,11 +166,18 @@ For the NTL-LTER dataset, can we predict PM2.5 from Ozone?
 
 #Exercise 3: Run a linear regression PM2.5 by Ozone. Find the p-value and R-squared value. 
 
+PM2.5byOzone.regression <- lm(data = EPAair, PM2.5 ~ Ozone)
+summary(PM2.5byOzone.regression)
 
+#R-squared = 0.1316, ozone explains 13% of the variability of PM2.5
+#therefore need more variables for better explanation more explanatory variables needed 
 
 #Exercise 4: Build a scatterplot. Add a line and standard error for the linear regression. 
 
-
+PM2.5byOzone.Plot <- ggplot(EPAair, aes(x = Ozone, y = PM2.5))+
+  geom_point()+ 
+  geom_smooth(method = "lm", col = "blue")
+print(PM2.5byOzone.Plot)
 
 ```
 
@@ -182,15 +190,28 @@ What other variables can we add to improve model?
 
 #Exercise 5: Build correlation plots and identify more possible explanatory variables to add to the regression.
 
+library(dplyr)
+EPAair.subset <- EPAair %>% 
+  select(meanLat:Ozone) %>% 
+  na.omit()
 
+EPAairCorr <- cor(EPAair.subset)
+corrplot(EPAairCorr, method = "ellipse")
+corrplot.mixed(EPAairCorr, upper = "ellipse")
 
 
 #Exercise 6: Choose a model by AIC in a Stepwise Algorithm. Do the results from AIC match the variables you selected on Exercise 5?
 
-
+OzoneAll.regression <- lm(data = EPAair.subset, PM.5 ~ Ozone +
+                            Year + Month + meanLng + mean Lat)
+step(OzoneAll.regression)
 
 
 #Exercise 7: Run another regression using the variables selected on Exercise 6. Compare r-squared value with the one from Exercise 5. 
+
+OzoneBest.regression <- 
+  
+# new R squared = .192 19% explained now 
 
 ```
 
