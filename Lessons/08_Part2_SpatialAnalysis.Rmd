@@ -118,19 +118,24 @@ mapView(counties_sf, zcol = "AWATER")
 ```{r read HUCs shapefile}
 #Read the shapefile into an sf dataframe named "huc8_sf"
 
+huc8_sf <- st_read('./Data/Spatial/NCHUC8.shp')
 
 #Reveal the columns
-
+names(huc8_sf)
 
 #Check the CRS
-
+st_crs(huc8_sf)
 
 #Examine some records
-
+head(huc8_sf)
 
 #View the data as a map, colored by the acreage in each
+ggplot(data = huc8_sf)+ 
+  geom_sf(aes(fill = ACRES))+
+  scale_fill_continuous(type = 'viridis')
 
-
+mapview(huc8_sf, zcol = 'ACRES')
+#can also save these from viewer by clicking export can make it an html file 
 ```
 
 ### 2.2.3 Challenge!
@@ -140,10 +145,14 @@ mapView(counties_sf, zcol = "AWATER")
 ```{r Select the Upper Neuse HUC 8}
 #Read the shapefile into an sf dataframe
 
-
+huc8_sf.subest <- st_read('./Data/Spatial/NCHUC8.shp')%>%
+  filter(SUBBASIN == 'Upper Neuse')
 
 #Create a map
 
+ggplot() + 
+  geom_sf(data=huc8_sf.subest, fill = 'purple')+
+  geom_sf(data=huc8_sf, fill = 'orange', alpha = 0.1)
 
 ```
 
@@ -239,18 +248,28 @@ ggplot() +
 
 ```{r}
 #Compute HUC8 wind energy
-
-
-
+wind_raw <- read.csv('https://raw.githubusercontent.com/ENV859/EnviroAtlasData/main/Wind_Energy.csv', colClasses = c('HUC 12' = 'factor')) %>% 
+  mutate(HUC_8 = substr(HUC_12,1,8)) %>%
+  group_by(HUC_8)%>%
+  summarise(SumWindEnergy = sum(AvgWindEnergy))
 
 #Join to HUC_8 features
 
+HUC_8_join <- merge(x = huc8_sf,
+                    y = wind_raw,
+                    by.x = "HUC_8",
+                    by.y = "HUC_8")
 
+
+HUC_8_sf_join2 <- huc8_sf %>%
+  left_join(wind_raw, by = c("HUC_8" = "HUC_8"))
 
 
 #View the outputs
 
-
+ggplot(data = HUC_8_sf_join2)+
+  geom_sf(aes(fill = SumWindEnergy))+
+  
 
 ```
 
