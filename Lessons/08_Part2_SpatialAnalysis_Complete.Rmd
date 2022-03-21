@@ -78,6 +78,7 @@ st_crs(epa_pm25_sites_sf)$epsg
 #Plot the data
 ggplot(data=epa_pm25_sites_sf) +
   geom_sf()
+mapview(epa_pm25_sites_sf)
 ```
 
 ## 2.2 Reading shapefiles into R with `sf`
@@ -135,6 +136,8 @@ ggplot(data=huc8_sf) +
   geom_sf(aes(fill=ACRES)) + 
   scale_fill_continuous(type='viridis')
 
+mapview(huc8_sf, zcol = "ACRES")
+
 ```
 
 ### 2.2.3 Challenge!
@@ -151,6 +154,9 @@ ggplot() +
   geom_sf(data=huc8_sf,fill='orange') + 
   geom_sf(data=huc8_sf.subset, fill='purple')
 
+mapview(huc8_sf, col.regions = "orange")+
+  mapview(huc8_sf.subset, col.regions = "purple")
+
 ```
 
 ### 2.2.4 Reading in GeoJSON data
@@ -161,7 +167,7 @@ When the data is served in GeoJSON format, we can ingest it directly in to R. Fo
 
 If you have difficulty, the link you want is: - <https://opendata.arcgis.com/datasets/ee0263bd105d41599be22d46107341c3_0.geojson>
 
-This a link to a spatial dataset in GeoJSON format. Now let's read this dataset in and explore it:
+This is a link to a spatial dataset in GeoJSON format. Now let's read this dataset in and explore it:
 
 ```{r load.geojson.data}
 powerplants_sf <- st_read('https://opendata.arcgis.com/datasets/ee0263bd105d41599be22d46107341c3_0.geojson')
@@ -174,6 +180,7 @@ nrow(powerplants_sf)
 
 #View on a map - specify the geometry column to draw faster
 plot(powerplants_sf$geometry)
+mapview(powerplants_sf)
 
 #Filter for just powerplants found in NC
 nc_powerplants_sf <- powerplants_sf %>% 
@@ -362,6 +369,7 @@ neuse_intersect_2 <- counties_sf_utm %>%
 
 #View the result
 myMap + mapview(neuse_intersect_2, alpha.regions = 0)
+
 
 #Actually intersect the counties (not just select those that intersect)
 neuse_counties_sf <- neuse_sf %>% 

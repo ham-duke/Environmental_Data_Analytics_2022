@@ -32,11 +32,11 @@ The packages we'll need for this lesson are below. Install as necessary and ensu
 library(tidyverse, quietly = TRUE)
 library(lubridate)
 
-#install.packages('sf')
+install.packages('sf')
 library(sf)
-#install.packages('leaflet')
+install.packages('leaflet')
 library(leaflet)
-#install.packages('mapview')
+install.packages('mapview')
 library(mapview)
 
 #Disable on-the-fly projections
@@ -107,16 +107,20 @@ EPAair <- read.csv("./Data/Processed/EPAair_O3_PM25_NC2021_Processed.csv", strin
 EPAair.sites <- EPAair %>% 
   group_by(Site.Name, COUNTY, SITE_LATITUDE, SITE_LONGITUDE) %>% 
   summarize(
-    mean_Ozone = mean(Ozone, na.rm=T),    #What does "na.rm=T" do? Is it necessary?
+    mean_Ozone = mean(Ozone, na.rm=T),    #What does "na.rm=T" do? Is it necessary? #remove nas True
     mean_PM25 = mean(PM2.5, na.rm=T),
     count_all = n(),
     count_Ozone = sum(!is.na(Ozone)),
     count_PM25 = sum(!is.na(PM2.5)))
 
 #Convert to a spatial dataframe
+#make simple table into simple feature 
 EPAair.sf <- EPAair.sites %>% 
   st_as_sf(coords = c('SITE_LONGITUDE','SITE_LATITUDE'),
            crs=4326)
+#long = x, lat = y, crs = 4326... (well explain later...)
+class(EPAair.sf)
+mapview(EPAair.sf)
 
 #View the data using the methods above...
 
@@ -127,11 +131,13 @@ EPAair.sf <- EPAair.sites %>%
 ```{r Create a spatial dataframe from scratch}
 #First create a simple feature geometry object ("sfg")
 sfg_GraingerHall <- st_point(c(-78.9427,36.00465))
+#This is a simple feature point
 class(sfg_GraingerHall)
 mapview(sfg_GraingerHall)
 
 #Upgrade to a simple feature geometry column by adding a crs 
 sfc_GraingerHall <- st_sfc(sfg_GraingerHall,crs=4326)
+#sfc - simple feature column 
 class(sfc_GraingerHall)
 mapview(sfc_GraingerHall)
 
@@ -178,7 +184,7 @@ The "solution" to these issues involves creating a vast number of different coor
 
 2. A coordinate system, defined by the units of measurement (either angular [degrees], or planar [meters or feet]), and the location of its origin. Projected coordinate systems tend to be more accurate at their origin, with distortion increasing as you move away; thus you'd want to select a coordinate reference system who's origin is closest to the features in your analysis. 
 
-All simple features need to be associated with a defined coordinate reference system. The crs can be *geographic*, where coordinate values remain in angular units, or *project* where the angular units have been translated into planar ones using some form of projection method. The crs associated with the simple features provides critical information for processing spatial analyses such as computing distances, calculating areas, etc. It also enables datasets using one crs to be **transformed** into another crs so that analyses can be done across spatial datasets.  
+All simple features need to be associated with a defined coordinate reference system. The crs can be *geographic*, where coordinate values remain in angular units, or *projected* where the angular units have been translated into planar ones using some form of projection method. The crs associated with the simple features provides critical information for processing spatial analyses such as computing distances, calculating areas, etc. It also enables datasets using one crs to be **transformed** into another crs so that analyses can be done across spatial datasets.  
 
 
 ## 3.2  EPSG codes and "PROJ4Strings"
@@ -186,17 +192,19 @@ All simple features need to be associated with a defined coordinate reference sy
 The "4326" in the `crs = 4326` is an EPSG code, a number used to look up a specific crs.
 
 The website <http://spatialreference.org/> lists hundreds of standard CRS along with a map and description of where it's appropriate. For example, a useful one in North Carolina is [UTM Zone 17N-NAD 83](http://spatialreference.org/ref/epsg/nad83-utm-zone-17n/). Note also that its *EPSG code* is `26917`; this EPSG code one way we can assign a CRS to our data. If you click on the the "Well Known Text as HTML" link, it will reveal all the specific associated with that CRS... (Another site listing coordinate reference systems is <http://www.epsg.org/>)
+espg.io - can learn what coordinate system something is 
 
 Some CRS, however, do not have an associated EPSG code, and for those, we can use the "proj4string", which is a long hand form of the projection information. Just to make it more confusing, some coordinate systems have a "WKT" or "Well known text" code.Mostly, these are all interchangeable and the important bit here is that you understand the need for and requirements of associating a CRS with a spatial dataset. I found this site gives a useful overview of the nuances of coordinate systems: <https://bit.ly/2XUGMyX>
 
 ### 3.2.1 Some commonly used CRS
 
 **EPSG:4326**
+#wgs84
 
 WGS 84 or WGS84 (World Geodetic System 1984, used in GPS) <http://epsg.io/4326>
 
-**EPSG:102008**
 
+**EPSG:102008**
 NAD83 / North America Albers Equal Area Conic <http://epsg.io/102008>
 
 **EPSG:various UTM**
@@ -219,7 +227,7 @@ National Center for Ecological Analysis and Synthesis created a CRS summary shee
 ---
 
 ## EXERCISE: Spatial Analysis
-Say we want to the distance between our EPA sites and the nearest Gas Plant. We don't want to report the distances in degrees, so we first want to project our data into a projected crs. We'll use the UTM Zone 17 N - WGS84 crs (EPSG = 32617) 
+Say we want to determine the distance between our EPA sites and the nearest Gas Plant. We don't want to report the distances in degrees, so we first want to project our data into a projected crs. We'll use the UTM Zone 17 N - WGS84 crs (EPSG = 32617) 
 
 
 ```{r Transform the dataset}
