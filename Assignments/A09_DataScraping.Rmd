@@ -1,6 +1,6 @@
 ---
 title: "Assignment 09: Data Scraping"
-author: "Student Name"
+author: "Halina Malinowski"
 output: pdf_document
 geometry: margin=2.54cm
 editor_options: 
@@ -30,6 +30,11 @@ This exercise accompanies the lessons in Environmental Data Analytics on data sc
 
 ```{r, message = FALSE}
 #1
+getwd()
+
+library(tidyverse)
+library(rvest)
+
 
 
 ```
@@ -127,3 +132,5 @@ max.withdrawals.mgd <-
 ```
 
 >Question: Just by looking at the plot (i.e. not running statistics), does Asheville have a trend in water usage over time?
+
+>Answer: 
