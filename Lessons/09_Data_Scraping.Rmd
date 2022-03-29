@@ -236,7 +236,7 @@ scrape.it <- function(the_year, the_facility){
   avg_withdrawals <- the_website %>% html_nodes(the_data_tag) %>% html_text()
   
   #Convert to a dataframe
-  df_withdrawals <- data.frame("Month" = rep(1:12),
+  df_withdrawals_1 <- data.frame("Month" = rep(1:12),
                                "Year" = rep(the_year,12),
                                "Avg_Withdrawals_mgd" = as.numeric(avg_withdrawals)) %>% 
     mutate(Registrant = !!the_registrant,
@@ -248,7 +248,7 @@ scrape.it <- function(the_year, the_facility){
   #Sys.sleep(1) #uncomment this if you are doing bulk scraping!
   
   #Return the dataframe
-  return(df_withdrawals)
+  return(df_withdrawals_1)
 }
 ```
 
