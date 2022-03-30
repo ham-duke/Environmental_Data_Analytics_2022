@@ -19,7 +19,7 @@ ui <- fluidPage(
       selectInput(inputId = "dropdown_input", 
                   label = "Nutrient",
                   choices = c("tn_ug", "tp_ug", "nh34", "no23", "po4"), 
-                  selected = "tp_ug"),
+                  selected = "tp_ug"), #default choice before user selects anything
   
       ),
 
@@ -34,7 +34,7 @@ server <- function(input, output) {
     # Create a ggplot object for the type of plot you have defined in the UI  
        output$scatterplotty <- renderPlot({
         ggplot(nutrient_data, 
-               aes_string(x = "sampledate", y = input$dropdown_input, 
+               aes_string(x = "sampledate", y = input$dropdown_input, #this is the name from user drop down made above 
                           fill = "depth_id", shape = "lakename")) +
           geom_point(alpha = 0.8, size = 2) +
           theme_classic(base_size = 14) +
