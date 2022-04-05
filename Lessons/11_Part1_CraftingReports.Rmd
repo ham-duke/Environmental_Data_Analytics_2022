@@ -1,6 +1,7 @@
 ---
 title: '11: Crafting Reports'
 author: Environmental Data Analytics | John Fay & Luana Lima | Developed by Kateri Salk
+subtitle: Assignment completed by Halina Malinowski
 date: "Spring 2022"
 output:
  pdf_document: default
@@ -56,8 +57,9 @@ Lastly, this [website](https://rmarkdown.rstudio.com) give a great & thorough ov
 
 ## WHAT ELSE CAN R MARKDOWN DO?
 See: <https://rmarkdown.rstudio.com> and class recording. 
- * Languages other than R...
- * Various outputs...
+
+* *Languages other than R* - R markdown  can use other languages including R, Python, and SQL.
+* *Various outputs* - R markdown supports many types of outputs including, but not limited to PDF, HTML, dashboards, shiny apps, MS word, etc. 
  
 ------------------------------------------------------------------------
 
@@ -65,21 +67,27 @@ See: <https://rmarkdown.rstudio.com> and class recording.
 
 <Fill in our discussion below with bullet points. Use italics and bold for emphasis (hint: use the cheat sheets or `Help` →`Markdown Quick Reference` to figure out how to make bold and italic text).> 
 
-*replicability 
-*shareability / collaboration 
-*clean output 
-*clean code easier to understand and work together 
-*integration with github has a nice platform for collab 
-
+### **Reasons to use Markdown**
+* **Replicability** - ease of replicability for other researchers 
+* **Shareability** -  ease of collaboration with others. R markdown and its connection to *Github* make it easy to work with other collaborators and edit code.
+* **Clean Output** - R Markdown makes the final product in a clean output that is easy to read, understand, and reproduce. Figures and code can be added or removed within text very easily.
+* **Clean/organized Code** - Using R Markdown helps create clean and organized code which is easier to understand and use in working with other people. Also makes it easier for you to revist your code and understand it. You can also select to only run certain chunks at a time which makes it easy to manage your code and output. 
+* **Integration with Github** - R Markdowns integration with Github gives it a nice platform for collaboration. The additional extension in R makes it really easy to push and pull and share code. *(I really love this feature! It was a little confusing at first, but I love how its essentially google docs for code!)*
 
 
 ## TEXT EDITING CHALLENGE
 
 Create a table below that details the example datasets we have been using in class. The first column should contain the names of the datasets and the second column should include some relevant information about the datasets. (Hint: use the cheat sheets to figure out how to make a table in Rmd)
 
-XXXX | XXXX
-XXXX | XXXX
-XXXX | XXXX
+### **Table 1. Dataset descriptions**
+
+Dataset | Information
+------- | ---------------
+ECOTOX | Contains data about insects and the effects of neonicotinoids
+EPAair | Contains data about air quality in North Carolina from 2018 - 2019
+NEON_NIWO_Litter | Contains data about litter fall and woody debris collected at Niwot Ridge Long-Term Ecological Research (LTER) station
+NTL-LTER_Lake | Contains data about nutrients as well as chemical and physical properties of several lakes in the North Temperate Lakes District in Wisconsin
+NWIS_SiteFlowData | Contains data about river site flow in Nebraska 
 
 ## R CHUNK EDITING CHALLENGE
 
@@ -89,9 +97,10 @@ Create an R chunk below that installs the package `knitr`. Instead of commenting
 
 ```{r eval = FALSE, include = FALSE}
 
+install.packages('knitr')
+library(knitr)
 
 ```
-
 
 ### Setup
 
@@ -101,8 +110,27 @@ Load the NTL-LTER_Lake_Nutrients_Raw dataset, display the head of the dataset, a
 
 Customize the chunk options such that the code is run but is not displayed in the final document.
 
-``` {r include = FALSE, message = FALSE}
+``` {r setup, include = FALSE, message = FALSE}
 
+#Check working directory and load packages 
+getwd()
+library(tidyverse)
+library(lubridate)
+library(knitr)
+library(viridis)
+
+#Set theme
+mytheme <- theme_grey(base_size = 14) +
+  theme(axis.text = element_text(color = "black"), 
+        legend.position = "right")
+theme_set(mytheme)
+
+#Load data
+NTL_LTER_Lake_Nutrients_Raw <- read.csv("/Users/Dell Laptop/Documents/GitHub/EDA/Data/Raw/NTL-LTER_Lake_Nutrients_Raw.csv")
+head(NTL_LTER_Lake_Nutrients_Raw)
+NTL_LTER_Lake_Nutrients_Raw$sampledate <- as.Date(
+  NTL_LTER_Lake_Nutrients_Raw$sampledate, format = "%m/%d/%y")
+class(NTL_LTER_Lake_Nutrients_Raw$sampledate)
 
 ```
 
@@ -115,17 +143,92 @@ Create an R chunk below to create a processed dataset do the following operation
 -   Include only surface samples (depth = 0 m)
 -   Drop rows with missing data
 
+``` {r data_cleaning}
+#subset data
+colnames(NTL_LTER_Lake_Nutrients_Raw)
+NTL_LTER_Subset <- NTL_LTER_Lake_Nutrients_Raw %>% 
+  select(lakename:sampledate, depth:po4)
+colnames(NTL_LTER_Subset)
+
+#filter for depth = 0
+NTL_LTER_Subset <- NTL_LTER_Subset %>%
+  filter(NTL_LTER_Subset$depth == 0)
+unique(NTL_LTER_Subset$depth)
+
+#drop NAs
+NTL_LTER_Subset <- NTL_LTER_Subset %>% 
+  drop_na()
+
+```
+
 Create a second R chunk to create a summary dataset with the mean, minimum, maximum, and standard deviation of total nitrogen concentrations for each lake. Create a second summary dataset that is identical except that it evaluates total phosphorus. Customize the chunk options such that the code is run but not displayed in the final document.
+
+``` {r summary_datasets, echo = FALSE}
+
+NTL_LTER_summary_nitrogen <- NTL_LTER_Subset %>% 
+  group_by(lakename) %>%
+  summarise(mean_nitrogen = mean(tn_ug),
+            min_nitrogen = min(tn_ug),
+            max_nitrogen = max(tn_ug),
+            sd_nitrogen = sd(tn_ug))
+  
+NTL_LTER_summary_phosphorus <- NTL_LTER_Subset %>% 
+  group_by(lakename) %>%
+  summarise(mean_phosphorus = mean(tp_ug),
+            min_phosphorus = min(tp_ug),
+            max_phosphorus = max(tp_ug),
+            sd_phosphorus = sd(tp_ug))
+  
+```
 
 Create a third R chunk that uses the function `kable` in the knitr package to display two tables: one for the summary dataframe for total N and one for the summary dataframe of total P. Use the `caption = " "` code within that function to title your tables. Customize the chunk options such that the final table is displayed but not the code used to generate the table.
 
+```{r, echo = FALSE }
+
+knitr::kable(NTL_LTER_summary_nitrogen, caption = "Lake Nitrogen Concentration Summary Table")
+
+knitr::kable(NTL_LTER_summary_phosphorus, caption = "Lake Phosphorus Concentration Summary Table")
+
+```
+
 Create a fourth and fifth R chunk that generates two plots (one in each chunk): one for total N over time with different colors for each lake, and one with the same setup but for total P. Decide which geom option will be appropriate for your purpose, and select a color palette that is visually pleasing and accessible. Customize the chunk options such that the final figures are displayed but not the code used to generate the figures. In addition, customize the chunk options such that the figures are aligned on the left side of the page. Lastly, add a fig.cap chunk option to add a caption (title) to your plot that will display underneath the figure.
 
+```{r total_N_plot, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Total nitrogen over time", fig.align='left'}
+
+ggplot(NTL_LTER_Subset, aes(x = sampledate, y = tn_ug, color = lakename))+
+  geom_point()+
+  scale_color_viridis(discrete = TRUE, option = "C")+
+  ylab("Total Nitrogen (ug/L)") +
+  xlab("Sample Date") +
+  geom_smooth()
+
+```
+
+```{r total_P_plot, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Total phosphorus over time", fig.align='left'}
+
+ggplot(NTL_LTER_Subset, aes(x = sampledate, y = tp_ug, color = lakename))+
+  geom_point()+
+  scale_color_viridis(discrete = TRUE, option = "C")+
+  ylab("Total Phosphorus (ug/L)") +
+  xlab("Sample Date") + 
+  geom_smooth()
+
+```
+```
 
 ### Communicating results
 
 Write a paragraph describing your findings from the R coding challenge above. This should be geared toward an educated audience but one that is not necessarily familiar with the dataset. Then insert a horizontal rule below the paragraph. Below the horizontal rule, write another paragraph describing the next steps you might take in analyzing this dataset. What questions might you be able to answer, and what analyses would you conduct to answer those questions?
 
+### **Results** 
+
+After cleaning the data, two summary tables were created for nitrogen and phorphorus values of the NTL_LTER lakes. Overall nitrogen values were considerably higher than phosphorus values. From the summary tables it was clear that Hummingbird lake had the greatest mean total nitrogen and mean total phosphorus values. The above graphs displaying total nitrogen concentration over time and phosphorus concentration over time showed East Long Lake with the greatest values. From 1996 to 1998 many lakes saw increases in total nitrogen and phosphorus levels. West Long lake, Peter lake, and East Long lake all experienced large increase in nitrogen and phosphorus levels during this time. From the above results it appears nitrogen and phosphorus concentrations may be correlated in certain systems as they tend to increase and decrease in a similar pattern. 
+
+******************
+
+### **Further Analyses** 
+
+To further explore this dataset and gain a better understanding of the trends and relationships present I would create generalized linear models to explore the relationship between nitrogen concentrations and environmental and spatial variables. I would conduct the same analyses for phosphorus levels. I would also determine if nitrogen and phosphorus levels are correlated. Additionally, I would explore the data with a time series analysis to see what types of trends their may be in the data and if nitrogen and phosphorus trends are similar. Perhaps we could analyze if there are any seasonal trends in nutrient concentrations or any other cyclical behaviors over longer time scales. A spatial analysis displaying the sites on a map and their proximity may also help orient the reader to understand if there are spatial variables that are effecting the lake nutrient concentrations. Further analyses are needed to gain a full understanding of this dataset and the changes and variability in nitrogen and phosphorus levels across the examined lakes. 
 
 ## KNIT YOUR PDF
 When you have completed the above steps, try knitting your PDF to see if all of the formatting options you specified turned out as planned. This may take some troubleshooting.
